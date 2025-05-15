@@ -1,4 +1,3 @@
-
 export interface Product {
   id: number;
   name: {
@@ -34,7 +33,7 @@ const products: Product[] = [
     },
     price: 45,
     currency: "₾",
-    image: "/lovable-uploads/e44f7bb1-807b-4b8d-b538-0dd1ea593e33.png",
+    image: "/shoppy/lovable-uploads/e44f7bb1-807b-4b8d-b538-0dd1ea593e33.png",
     category: "bracelets",
     featured: true,
     stock: 5
@@ -53,7 +52,7 @@ const products: Product[] = [
     },
     price: 35,
     currency: "₾",
-    image: "/lovable-uploads/7d960c2b-179a-4202-8b7c-554d2e26a03a.png",
+    image: "/shoppy/lovable-uploads/7d960c2b-179a-4202-8b7c-554d2e26a03a.png",
     category: "bracelets",
     stock: 5
   },
@@ -71,7 +70,7 @@ const products: Product[] = [
     },
     price: 25,
     currency: "₾",
-    image: "/lovable-uploads/c45895f2-5e95-475d-aa43-e42a2ff8067b.png",
+    image: "/shoppy/lovable-uploads/c45895f2-5e95-475d-aa43-e42a2ff8067b.png",
     category: "hairpins",
     stock: 5
   },
@@ -89,7 +88,7 @@ const products: Product[] = [
     },
     price: 40,
     currency: "₾",
-    image: "/lovable-uploads/a8343320-1131-4091-b76f-99dcd62efce4.png",
+    image: "/shoppy/lovable-uploads/a8343320-1131-4091-b76f-99dcd62efce4.png",
     category: "hairpins",
     stock: 5
   },
@@ -107,7 +106,7 @@ const products: Product[] = [
     },
     price: 30,
     currency: "₾",
-    image: "/lovable-uploads/8b86cd6c-466a-4c62-a5bd-14923b811d03.png",
+    image: "/shoppy/lovable-uploads/8b86cd6c-466a-4c62-a5bd-14923b811d03.png",
     category: "rings",
     stock: 5
   },
@@ -125,7 +124,7 @@ const products: Product[] = [
     },
     price: 20,
     currency: "₾",
-    image: "/lovable-uploads/2119f525-d255-419e-ad78-3af57aa1e515.png",
+    image: "/shoppy/lovable-uploads/2119f525-d255-419e-ad78-3af57aa1e515.png",
     category: "earrings",
     stock: 5
   },
@@ -143,7 +142,7 @@ const products: Product[] = [
     },
     price: 35,
     currency: "₾",
-    image: "/lovable-uploads/7796131e-ac33-413f-a1ee-50b23b150707.png",
+    image: "/shoppy/lovable-uploads/7796131e-ac33-413f-a1ee-50b23b150707.png",
     category: "hairpins",
     stock: 5
   },
@@ -161,7 +160,7 @@ const products: Product[] = [
     },
     price: 25,
     currency: "₾",
-    image: "/lovable-uploads/7536bf2a-a9c0-457a-9a0d-5ccc1a1bce8c.png",
+    image: "/shoppy/lovable-uploads/7536bf2a-a9c0-457a-9a0d-5ccc1a1bce8c.png",
     category: "earrings",
     stock: 5
   }
