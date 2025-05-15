@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -11,12 +11,20 @@ import { Star, User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogTrigger, DialogContent } from '@/components/ui/dialog';
 
 const Profile = () => {
   const { isLoggedIn, user } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [error, setError] = React.useState<string | null>(null);
+  const [reviewProductId, setReviewProductId] = useState<number | null>(null);
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewPhoto, setReviewPhoto] = useState('');
+  const [reviewError, setReviewError] = useState('');
 
   React.useEffect(() => {
     if (!isLoggedIn || !user) {
@@ -100,6 +108,8 @@ const Profile = () => {
                     user.purchasedProducts.map(productId => {
                       const product = getProductById(productId);
                       if (!product) return null;
+                      // Проверяем, оставил ли пользователь отзыв на этот товар
+                      const alreadyReviewed = userReviews.some(r => r.productId === productId);
                       return (
                         <div
                           key={productId}
@@ -123,6 +133,77 @@ const Profile = () => {
                               {t('profile.view_product')}
                             </Link>
                           </Button>
+                          {/* Кнопка оставить отзыв */}
+                          {!alreadyReviewed && (
+                            <Dialog open={!!reviewProductId} onOpenChange={open => { if (!open) { setReviewProductId(null); setReviewRating(0); setReviewComment(''); setReviewPhoto(''); setReviewError(''); } }}>
+                              <DialogTrigger asChild>
+                                <Button
+                                  variant="default"
+                                  onClick={() => setReviewProductId(productId)}
+                                  className="ml-2"
+                                >
+                                  {t('reviews.leave_review')}
+                                </Button>
+                              </DialogTrigger>
+                              {/* Модальное окно с формой */}
+                              <DialogContent>
+                                <h3 className="font-bold mb-4 text-lg">{t('reviews.leave_review')}</h3>
+                                <div className="mb-3 flex items-center gap-2">
+                                  <span className="mr-2">{t('reviews.rating')}:</span>
+                                  {[1,2,3,4,5].map(star => (
+                                    <button
+                                      key={star}
+                                      type="button"
+                                      className={`focus:outline-none ${star <= reviewRating ? 'text-yellow-400' : 'text-gray-400'}`}
+                                      onClick={() => setReviewRating(star)}
+                                      aria-label={`${t('reviews.rating')} ${star}`}
+                                    >
+                                      <Star className="w-6 h-6 fill-current" />
+                                    </button>
+                                  ))}
+                                </div>
+                                <Textarea
+                                  className="mb-3 bg-background text-foreground"
+                                  placeholder={t('reviews.comment_placeholder')}
+                                  value={reviewComment}
+                                  onChange={e => setReviewComment(e.target.value)}
+                                  rows={3}
+                                />
+                                <Input
+                                  className="mb-3 bg-background text-foreground"
+                                  placeholder={t('reviews.photo_url_placeholder')}
+                                  value={reviewPhoto}
+                                  onChange={e => setReviewPhoto(e.target.value)}
+                                />
+                                {reviewError && <div className="text-red-500 mb-2">{reviewError}</div>}
+                                <div className="flex gap-2">
+                                  <Button
+                                    variant="default"
+                                    onClick={() => {
+                                      if (!reviewRating) return setReviewError(t('reviews.rating_required'));
+                                      if (!reviewComment.trim()) return setReviewError(t('reviews.comment_required'));
+                                      setReviewError('');
+                                      setReviewProductId(null);
+                                      setReviewRating(0);
+                                      setReviewComment('');
+                                      setReviewPhoto('');
+                                    }}
+                                  >
+                                    {t('reviews.submit')}
+                                  </Button>
+                                  <Button variant="outline" onClick={() => {
+                                    setReviewProductId(null);
+                                    setReviewRating(0);
+                                    setReviewComment('');
+                                    setReviewPhoto('');
+                                    setReviewError('');
+                                  }}>
+                                    {t('product.back_to_shop')}
+                                  </Button>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          )}
                         </div>
                       );
                     })

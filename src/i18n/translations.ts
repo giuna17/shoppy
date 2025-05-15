@@ -713,15 +713,20 @@ export const translations: Translations = {
     en: 'Purchase History',
     ge: 'შესყიდვების ისტორია'
   },
-  'profile.your_reviews': {
-    ru: 'Ваши отзывы',
-    en: 'Your Reviews',
-    ge: 'თქვენი მიმოხილვები'
+  'profile.recent_purchases': {
+    ru: 'Ваши последние покупки',
+    en: 'Your recent purchases',
+    ge: 'თქვენი ბოლო შესყიდვები'
   },
-  'profile.products_awaiting_review': {
-    ru: 'Товары, ожидающие отзыва',
-    en: 'Products Awaiting Review',
-    ge: 'პროდუქტები მიმოხილვის მოლოდინში'
+  'profile.my_reviews': {
+    ru: 'Мои отзывы',
+    en: 'My Reviews',
+    ge: 'ჩემი მიმოხილვები'
+  },
+  'profile.reviews_description': {
+    ru: 'Отзывы, которые вы оставили о товарах',
+    en: 'Reviews you have left for products',
+    ge: 'მიმოხილვები, რომლებიც დატოვეთ პროდუქტებზე'
   },
   'profile.no_purchases': {
     ru: 'У вас пока нет покупок',
@@ -733,10 +738,20 @@ export const translations: Translations = {
     en: 'You haven\'t left any reviews yet',
     ge: 'თქვენ ჯერ არ დაგიტოვებიათ მიმოხილვები'
   },
+  'profile.view_product': {
+    ru: 'Посмотреть товар',
+    en: 'View Product',
+    ge: 'პროდუქტის ნახვა'
+  },
   'profile.no_pending_reviews': {
     ru: 'Нет товаров, ожидающих отзыва',
     en: 'No products awaiting review',
     ge: 'არ არის პროდუქტები მიმოხილვის მოლოდინში'
+  },
+  'language': {
+    ru: 'ru',
+    en: 'en',
+    ge: 'ge'
   }
 };
 
