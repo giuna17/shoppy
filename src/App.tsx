@@ -26,7 +26,7 @@ const App = () => (
           <CartProvider>
             <Toaster />
             <Sonner />
-            <BrowserRouter>
+            <BrowserRouter basename="/shoppy">
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/shop" element={<Shop />} />
