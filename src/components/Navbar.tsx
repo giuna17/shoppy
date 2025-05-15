@@ -281,7 +281,7 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container mx-auto flex items-center justify-between py-3">
         <div className="flex items-center gap-2">
-          <img src="/lovable-uploads/7aa51a58-deaa-4064-a1d1-4b19f2ac5ca5.png" alt="Neko" className="h-10 w-10" />
+          <img src="/shoppy/lovable-uploads/nekos-logo.jpeg" alt="Neko mini logo" className="h-8 w-8" />
           <Link to="/" className="text-xl font-bold tracking-tighter">
             <span className="text-crimson">NEKO</span><span className="text-black">.</span><span className="text-white">shop</span>
           </Link>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -12,7 +11,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <img src="/lovable-uploads/7aa51a58-deaa-4064-a1d1-4b19f2ac5ca5.png" alt="Neko" className="h-10 w-10" />
+              <img src="/shoppy/lovable-uploads/nekos-logo.jpeg" alt="Neko mini logo" className="h-8 w-8" />
               <h3 className="text-xl font-bold tracking-tighter">
                 <span className="text-crimson">NEKO</span><span className="text-black">.</span><span className="text-white">shop</span>
               </h3>

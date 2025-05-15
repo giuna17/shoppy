@@ -34,16 +34,16 @@ const Index = () => {
         {/* Background image */}
         <div className="absolute inset-0 z-0">
           <div 
-            className="w-full h-full bg-[url('/lovable-uploads/7aa51a58-deaa-4064-a1d1-4b19f2ac5ca5.png')] bg-no-repeat bg-center bg-contain opacity-50 scale-[1.7] translate-y-[18%]"
+            className="w-full h-full bg-[url('/lovable-uploads/7aa51a58-deaa-4064-a1d1-4b19f2ac5ca5.png')] bg-no-repeat bg-center bg-contain opacity-50 scale-[1.95] translate-y-[15%]"
           />
           {/* Gradient overlay to hide bottom part */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background to-background" style={{ top: '40%' }} />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background to-background" style={{ top: '65%' }} />
         </div>
         
         {/* Content */}
         <div className="container mx-auto text-center relative z-10">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 mt-6 relative z-10">
-              ENJOY <span className="text-crimson">ANARCHY</span>
+            <h1 className="text-6xl md:text-8xl font-bold tracking-tight mb-4 mt-6 relative z-10 font-medieval">
+              <span className="text-crimson">Handmade</span> <span className="text-white">Oddities</span>
             </h1>
           <p className="text-xl text-foreground/80 max-w-2xl mx-auto mb-8">
             {t('home.subtitle')}
