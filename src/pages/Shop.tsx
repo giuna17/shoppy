@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -9,15 +8,17 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCartContext } from '@/contexts/CartContext';
 import { applyFilters } from '@/services/reviewService';
+import { Search } from 'lucide-react';
 
 const Shop = () => {
   const { t } = useLanguage();
   const { addToCart } = useCartContext();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterValues | null>(null);
+  const [search, setSearch] = useState('');
   
   const allProducts = getProducts();
-  const categories = [...new Set(allProducts.map(product => product.category))];
+  const categories = [...new Set([...allProducts.map(product => product.category), 'candles'])];
   
   // Filter products based on category and other filters
   let products = activeCategory 
@@ -32,6 +33,17 @@ const Shop = () => {
       materials: filters.materials.length > 0 ? filters.materials : undefined,
       colors: filters.colors.length > 0 ? filters.colors : undefined,
       inStock: filters.inStock
+    });
+  }
+  
+  // Применяем поиск по названию и описанию
+  if (search.trim()) {
+    products = products.filter(product => {
+      const lang = t('language');
+      return (
+        product.name[lang].toLowerCase().includes(search.toLowerCase()) ||
+        product.description[lang].toLowerCase().includes(search.toLowerCase())
+      );
     });
   }
   
@@ -59,6 +71,7 @@ const Shop = () => {
     if (category === 'rings') return t('category.rings');
     if (category === 'earrings') return t('category.earrings');
     if (category === 'hairpins') return t('category.hairpins');
+    if (category === 'candles') return t('category.candles');
     return category.charAt(0).toUpperCase() + category.slice(1);
   };
   
@@ -70,26 +83,36 @@ const Shop = () => {
         <div className="container mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-6">{t('nav.shop')}</h1>
-            
-            <div className="flex flex-wrap gap-2 mb-6">
-              <Button
-                variant={activeCategory === null ? "default" : "outline"}
-                className={activeCategory === null ? "bg-crimson text-black" : ""}
-                onClick={() => setActiveCategory(null)}
-              >
-                {t('category.all')}
-              </Button>
-              
-              {categories.map(category => (
+            <div className="flex flex-wrap gap-2 mb-6 items-center justify-between">
+              <div className="flex flex-wrap gap-2">
                 <Button
-                  key={category}
-                  variant={activeCategory === category ? "default" : "outline"}
-                  className={activeCategory === category ? "bg-crimson text-black" : ""}
-                  onClick={() => setActiveCategory(category)}
+                  variant={activeCategory === null ? "default" : "outline"}
+                  className={(activeCategory === null ? "bg-crimson text-black " : "") + "text-lg md:text-xl px-6 py-3"}
+                  onClick={() => setActiveCategory(null)}
                 >
-                  {getCategoryName(category)}
+                  {t('category.all')}
                 </Button>
-              ))}
+                {categories.map(category => (
+                  <Button
+                    key={category}
+                    variant={activeCategory === category ? "default" : "outline"}
+                    className={(activeCategory === category ? "bg-crimson text-black " : "") + "text-lg md:text-xl px-6 py-3"}
+                    onClick={() => setActiveCategory(category)}
+                  >
+                    {getCategoryName(category)}
+                  </Button>
+                ))}
+              </div>
+              <div className="relative flex items-center ml-auto">
+                <input
+                  type="text"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder={t('home.search_placeholder') || 'Поиск...'}
+                  className="border rounded px-3 py-2 bg-background text-foreground focus:outline-crimson pr-10 min-w-[180px]"
+                />
+                <Search className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 pointer-events-none" />
+              </div>
             </div>
           </div>
           

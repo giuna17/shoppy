@@ -1,6 +1,6 @@
 export interface Order {
   id: number;
-  userId: string;
+  userId: number;
   productId: number;
   date: Date;
   status: 'completed' | 'pending' | 'cancelled';
@@ -11,7 +11,7 @@ const loadOrders = (): Order[] => {
   const savedOrders = localStorage.getItem('orders');
   if (savedOrders) {
     const parsed = JSON.parse(savedOrders);
-    return parsed.map((order: any) => ({
+    return parsed.map((order: Omit<Order, 'date'> & { date: string }) => ({
       ...order,
       date: new Date(order.date)
     }));
@@ -28,7 +28,7 @@ const saveOrders = (orders: Order[]) => {
 let orders: Order[] = loadOrders();
 
 // Add a new order
-export const addOrder = (userId: string, productId: number): Order => {
+export const addOrder = (userId: number, productId: number): Order => {
   const newOrder = {
     id: Math.max(0, ...orders.map(o => o.id)) + 1,
     userId,
@@ -43,12 +43,12 @@ export const addOrder = (userId: string, productId: number): Order => {
 };
 
 // Get all orders for a user
-export const getUserOrders = (userId: string): Order[] => {
+export const getUserOrders = (userId: number): Order[] => {
   return orders.filter(order => order.userId === userId);
 };
 
 // Check if user has purchased a specific product
-export const hasUserPurchasedProduct = (userId: string, productId: number): boolean => {
+export const hasUserPurchasedProduct = (userId: number, productId: number): boolean => {
   return orders.some(order => 
     order.userId === userId && 
     order.productId === productId && 

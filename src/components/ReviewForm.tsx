@@ -6,7 +6,7 @@ import { Star, Lock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { addReview, canUserReviewProduct } from '@/services/reviewService';
+import { addReview, canUserReviewProduct, setUserDiscount } from '@/services/reviewService';
 
 interface ReviewFormProps {
   productId: number;
@@ -33,7 +33,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId, onReviewAdded }) => 
       setCanReview(false);
       setBlockReason(t('reviews.login_required'));
     }
-  }, [auth.isLoggedIn, auth.user, productId]);
+  }, [auth.isLoggedIn, auth.user, productId, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,6 +67,11 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId, onReviewAdded }) => 
         photoUrl: photoUrl || undefined,
         date: new Date(),
       });
+      
+      // Если отзыв 5 звёзд и это первый такой отзыв — даём скидку
+      if (rating === 5 && !localStorage.getItem(`discountForUser_${auth.user.id}`)) {
+        setUserDiscount(auth.user.id);
+      }
       
       // Reset form
       setRating(5);

@@ -1,23 +1,9 @@
-
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { useState, ReactNode, useEffect } from 'react';
 import { Product } from '@/services/productService';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from './LanguageContext';
-
-export interface CartItem {
-  product: Product;
-  quantity: number;
-}
-
-interface CartContextType {
-  cart: CartItem[];
-  addToCart: (product: Product) => void;
-  removeFromCart: (productId: number) => void;
-  updateQuantity: (productId: number, quantity: number) => void;
-  clearCart: () => void;
-}
-
-const CartContext = createContext<CartContextType | undefined>(undefined);
+import { CartItem, CartContextType, CartContext } from './CartContext.utils';
+import { useCartContext } from './CartContext.hook';
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -43,9 +29,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         if (existingItem.quantity >= product.stock) {
           // Show warning toast instead of adding to cart
           toast({
-            title: t('toast.stock_limit_reached'),
+            title: t('product.out_of_stock'),
             description: t('toast.stock_limit_message'),
             duration: 3000,
+            variant: 'destructive',
           });
           return currentCart;
         }
@@ -122,10 +109,4 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useCartContext = (): CartContextType => {
-  const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCartContext must be used within a CartProvider');
-  }
-  return context;
-};
+export { useCartContext } from './CartContext.hook';

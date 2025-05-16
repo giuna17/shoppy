@@ -4,7 +4,7 @@ import { hasUserPurchasedProduct } from './orderService';
 export interface Review {
   id: number;
   productId: number;
-  userId: string;
+  userId: number;
   userName: string;
   rating: number;
   comment: string;
@@ -18,7 +18,7 @@ const initialReviews: Review[] = [
   {
     id: 1,
     productId: 1,
-    userId: "user1",
+    userId: 1,
     userName: "Anna K.",
     rating: 5,
     comment: "The blade bracelet is exactly what I was looking for! The quality is excellent, and it arrived very quickly. I've received so many compliments!",
@@ -28,7 +28,7 @@ const initialReviews: Review[] = [
   {
     id: 2,
     productId: 2,
-    userId: "user2",
+    userId: 2,
     userName: "Marina L.",
     rating: 4.5,
     comment: "Love the Guns N' Roses bracelet! The design is perfect, and it fits comfortably. The clasp could be a bit stronger, but overall it's great.",
@@ -39,7 +39,7 @@ const initialReviews: Review[] = [
   {
     id: 3,
     productId: 3,
-    userId: "user3",
+    userId: 3,
     userName: "Elena T.",
     rating: 5,
     comment: "These rose hairpins are absolutely gorgeous! They hold my hair perfectly and look so elegant. I'll definitely be buying more.",
@@ -50,7 +50,7 @@ const initialReviews: Review[] = [
   {
     id: 4,
     productId: 4,
-    userId: "user4",
+    userId: 4,
     userName: "Sophia R.",
     rating: 4,
     comment: "The rose comb is beautiful and high quality. It's a little heavier than expected, but it stays in place well.",
@@ -60,7 +60,7 @@ const initialReviews: Review[] = [
   {
     id: 5,
     productId: 5,
-    userId: "user5",
+    userId: 5,
     userName: "Lara M.",
     rating: 5,
     comment: "This portrait ring is such a unique piece! The vintage look is perfect, and the size is just right. Shipping was fast too!",
@@ -75,7 +75,7 @@ const loadReviews = (): Review[] => {
   const savedReviews = localStorage.getItem('reviews');
   if (savedReviews) {
     const parsed = JSON.parse(savedReviews);
-    return parsed.map((review: any) => ({
+    return parsed.map((review: Omit<Review, 'date'> & { date: string }) => ({
       ...review,
       date: new Date(review.date)
     }));
@@ -111,12 +111,17 @@ export const getTopReviews = (limit: number = 3): Review[] => {
 };
 
 // Check if user has already reviewed a product
-export const hasUserReviewedProduct = (userId: string, productId: number): boolean => {
+export const hasUserReviewedProduct = (userId: number, productId: number): boolean => {
   return reviews.some(review => review.userId === userId && review.productId === productId);
 };
 
+interface ReviewCheckResult {
+  canReview: boolean;
+  reason?: string;
+}
+
 // Check if user can review a product
-export const canUserReviewProduct = (userId: string, productId: number): { canReview: boolean; reason?: string } => {
+export const canUserReviewProduct = (userId: number, productId: number): ReviewCheckResult => {
   // Проверяем, купил ли пользователь товар
   if (!hasUserPurchasedProduct(userId, productId)) {
     return { 
@@ -125,8 +130,9 @@ export const canUserReviewProduct = (userId: string, productId: number): { canRe
     };
   }
 
-  // Проверяем, не оставлял ли пользователь уже отзыв
-  if (hasUserReviewedProduct(userId, productId)) {
+  // Проверяем, не оставлял ли пользователь уже отзыв (только по реальным отзывам)
+  const userReviewExists = reviews.some(r => r.userId === userId && r.productId === productId);
+  if (userReviewExists) {
     return { 
       canReview: false, 
       reason: 'reviews.already_reviewed'
@@ -167,14 +173,14 @@ export const getProductAverageRating = (productId: number): number => {
 };
 
 // Get user's reviews
-export const getUserReviews = (userId: string): Review[] => {
+export const getUserReviews = (userId: number): Review[] => {
   return reviews
     .filter(review => review.userId === userId)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
 // Get products awaiting review
-export const getProductsAwaitingReview = (userId: string): number[] => {
+export const getProductsAwaitingReview = (userId: number): number[] => {
   const userReviews = new Set(reviews
     .filter(review => review.userId === userId)
     .map(review => review.productId)
@@ -225,4 +231,15 @@ export const applyFilters = (
     
     return true;
   });
+};
+
+// Скидка за 5-звёздочный отзыв (одноразовая)
+export const setUserDiscount = (userId: number) => {
+  localStorage.setItem(`discountForUser_${userId}`, 'true');
+};
+export const hasUserDiscount = (userId: number) => {
+  return localStorage.getItem(`discountForUser_${userId}`) === 'true';
+};
+export const clearUserDiscount = (userId: number) => {
+  localStorage.removeItem(`discountForUser_${userId}`);
 };

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -7,23 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Filter } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getProducts } from '@/services/productService';
+import { FilterValues, materialOptions, colorOptions } from './ProductFilters.utils';
 
 interface ProductFiltersProps {
   onFilterChange: (filters: FilterValues) => void;
   categories: string[];
   initialFilters?: FilterValues;
 }
-
-export interface FilterValues {
-  priceRange: [number, number];
-  categories: string[];
-  materials: string[];
-  colors: string[];
-  inStock: boolean;
-}
-
-export const materialOptions = ['Metal', 'Silver', 'Gold', 'Fabric', 'Glass', 'Plastic'];
-export const colorOptions = ['Silver', 'Gold', 'Black', 'White', 'Red', 'Green', 'Blue', 'Purple', 'Pink'];
 
 const ProductFilters: React.FC<ProductFiltersProps> = ({
   onFilterChange,
@@ -195,7 +184,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
         <div>
           <h4 className="text-sm font-medium mb-3">{t('filters.materials')}</h4>
           <div className="space-y-2">
-            {materialOptions.map((material) => (
+            {["Metal", "Fabric", "Glass", "Plastic"].map((material) => (
               <div key={material} className="flex items-center">
                 <Checkbox 
                   id={`material-${material}`}
@@ -210,29 +199,6 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                   {material}
                 </Label>
               </div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Colors */}
-        <div>
-          <h4 className="text-sm font-medium mb-3">{t('filters.colors')}</h4>
-          <div className="flex flex-wrap gap-2">
-            {colorOptions.map((color) => (
-              <div 
-                key={color}
-                className={`w-8 h-8 rounded-full cursor-pointer border-2 ${
-                  filters.colors.includes(color) 
-                    ? 'border-crimson shadow-sm' 
-                    : 'border-border'
-                }`}
-                style={{ 
-                  backgroundColor: color.toLowerCase(),
-                  borderColor: color.toLowerCase() === 'white' ? '#aaa' : undefined
-                }}
-                onClick={() => handleColorToggle(color)}
-                title={color}
-              />
             ))}
           </div>
         </div>

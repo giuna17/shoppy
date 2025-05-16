@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ShoppingCart, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCartContext } from '@/contexts/CartContext';
 
 interface ProductCardProps {
   id: number;
@@ -35,7 +36,11 @@ const ProductCard = ({
   onAddToCart
 }: ProductCardProps) => {
   const { t, language } = useLanguage();
-  const isOutOfStock = stock <= 0;
+  const { cart } = useCartContext();
+  const itemInCart = cart.find(item => item.product.id === id);
+  const currentQuantity = itemInCart?.quantity || 0;
+  const remainingStock = stock - currentQuantity;
+  const isOutOfStock = remainingStock <= 0;
 
   return (
     <Card className={`product-card bg-card border-2 border-border overflow-hidden h-full flex flex-col ${isOutOfStock ? 'opacity-60 cursor-not-allowed' : ''}`}>
@@ -61,7 +66,7 @@ const ProductCard = ({
               </span>
             ) : (
               <span className="bg-background/80 backdrop-blur-sm text-crimson text-xs px-2 py-1 rounded">
-                {t('product.in_stock')}: {stock}
+                {t('product.in_stock')}: {remainingStock}
               </span>
             )}
           </div>

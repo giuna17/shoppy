@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, User, Facebook, LogOut } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -36,6 +36,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
+import { hasUserDiscount, clearUserDiscount } from '@/services/reviewService';
 
 const LoginForm = ({ onClose }: { onClose: () => void }) => {
   const [email, setEmail] = useState('');
@@ -254,6 +255,8 @@ const Navbar = () => {
   const { cart } = useCartContext();
   const [showLoginForm, setShowLoginForm] = useState(true);
   const auth = useAuth();
+  const navigate = useNavigate();
+  const [showAddressDialog, setShowAddressDialog] = useState(false);
   
   const navItems = [
     { name: t('nav.home'), path: "/" },
@@ -273,6 +276,9 @@ const Navbar = () => {
 
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
+  const userId = auth.user?.id;
+  const userHasDiscount = userId ? hasUserDiscount(userId) : false;
+
   const handleDialogClose = () => {
     setShowLoginForm(true);
   };
@@ -281,10 +287,14 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container mx-auto flex items-center justify-between py-3">
         <div className="flex items-center gap-2">
-          <img src="/shoppy/lovable-uploads/nekos-logo.jpeg" alt="Neko mini logo" className="h-8 w-8" />
-          <Link to="/" className="text-xl font-bold tracking-tighter">
-            <span className="text-crimson">NEKO</span><span className="text-black">.</span><span className="text-white">shop</span>
-          </Link>
+          <img
+            src="/shoppy/lovable-uploads/nekos-logo.jpeg"
+            alt="Neko mini logo"
+            className="h-12 w-12 md:h-[62px] md:w-[62px]"
+          />
+          <span className="text-2xl md:text-3xl font-bold text-crimson" style={{ fontSize: '2.6rem' }}>
+            NEKO<span className="text-white">shop</span>
+          </span>
         </div>
         
         <div className="hidden md:flex space-x-6">
@@ -292,7 +302,7 @@ const Navbar = () => {
             <Link 
               key={item.path} 
               to={item.path} 
-              className="text-foreground/80 hover:text-crimson transition text-lg py-2"
+              className="text-foreground/80 hover:text-crimson transition text-xl md:text-2xl py-2"
             >
               {item.name}
             </Link>
@@ -301,7 +311,7 @@ const Navbar = () => {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent text-foreground/80 hover:text-crimson text-lg py-2">
+                <NavigationMenuTrigger className="bg-transparent hover:bg-transparent text-foreground/80 hover:text-crimson text-lg md:text-xl py-2">
                   {t('nav.categories')}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -311,7 +321,7 @@ const Navbar = () => {
                         <NavigationMenuLink asChild>
                           <Link
                             to={item.path}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground text-lg"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground text-xl md:text-2xl"
                           >
                             {item.name}
                           </Link>
@@ -385,30 +395,91 @@ const Navbar = () => {
               <SheetHeader>
                 <SheetTitle>{t('cart.your_cart')}</SheetTitle>
               </SheetHeader>
-              <div className="mt-6">
+              <div className="mt-6 flex flex-col h-[80vh]">
                 {cart.length === 0 ? (
-                  <div className="text-center py-10">
+                  <div className="text-center py-10 flex-1">
                     <p className="text-muted-foreground">{t('cart.empty')}</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {cart.map(item => (
-                      <CartItem key={item.product.id} item={item} />
-                    ))}
-                    <div className="pt-4 border-t">
-                      <div className="flex justify-between font-medium py-2">
-                        <span>{t('cart.total')}:</span>
-                        <span>{cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0)} ₾</span>
-                      </div>
-                      <Button className="w-full mt-4 bg-crimson hover:bg-crimson/90 text-black">{t('cart.checkout')}</Button>
+                  <>
+                    <div className="space-y-4 overflow-y-auto flex-1 pr-2" style={{ maxHeight: '50vh' }}>
+                      {cart.map(item => (
+                        <CartItem key={item.product.id} item={item} />
+                      ))}
                     </div>
-                  </div>
+                    <div className="pt-4 border-t mt-4 sticky bottom-0 bg-background z-10">
+                      {(() => {
+                        const total = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+                        const delivery = total >= 100 ? 0 : 5;
+                        let finalTotal = total + delivery;
+                        let discountBlock = null;
+                        const deliveryText = total >= 100 ? t('cart.free_delivery') : t('cart.delivery_fee');
+                        let discountInfo = null;
+                        if (finalTotal >= 500) {
+                          finalTotal = Math.round(finalTotal * 0.9);
+                          discountBlock = (
+                            <div className="mb-2 p-2 rounded bg-green-100 text-base text-center text-green-700 border border-green-300 font-bold">
+                              {t('cart.discount_10')}
+                            </div>
+                          );
+                        } else if (userHasDiscount) {
+                          finalTotal = Math.round(finalTotal * 0.95);
+                          discountInfo = (
+                            <div className="mb-2 p-2 rounded bg-green-100 text-base text-center text-green-700 border border-green-300 font-bold">
+                              {t('cart.discount_5')}
+                            </div>
+                          );
+                        }
+                        return (
+                          <>
+                            {discountBlock}
+                            {discountInfo}
+                            <div className={`text-center text-sm font-semibold my-2 ${total >= 100 ? 'text-green-600' : 'text-red-600'}`}>{deliveryText}</div>
+                            <div className="flex justify-between font-medium py-2">
+                              <span>{t('cart.total')}:</span>
+                              <span>{finalTotal} ₾</span>
+                            </div>
+                            {total >= 100 ? (
+                              <div className="mt-2 p-2 rounded bg-blue-100 text-base text-center text-blue-700 border border-blue-200 font-semibold">
+                                {t('cart.free_delivery_info')}
+                              </div>
+                            ) : null}
+                            <Button className="w-full mt-4 bg-crimson hover:bg-crimson/90 text-black py-4 text-lg font-bold" onClick={() => {
+                              const userId = auth.user?.id;
+                              const address = localStorage.getItem(`profile_address_${userId}`) || '';
+                              const phone = localStorage.getItem(`profile_phone_${userId}`) || '';
+                              if (!address.trim() || !phone.trim()) {
+                                setShowAddressDialog(true);
+                                return;
+                              }
+                              if (userHasDiscount && userId) clearUserDiscount(userId);
+                              // ... здесь логика оформления заказа ...
+                            }}>{t('cart.checkout')}</Button>
+                          </>
+                        );
+                      })()}
+                    </div>
+                  </>
                 )}
               </div>
             </SheetContent>
           </Sheet>
         </div>
       </div>
+      {/* Диалог для заполнения адреса */}
+      <Dialog open={showAddressDialog} onOpenChange={setShowAddressDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('profile.address')}</DialogTitle>
+          </DialogHeader>
+          <div className="text-center text-lg mb-4">{t('profile.fill_address_warning') || 'Пожалуйста, заполните адрес проживания и номер телефона в профиле.'}</div>
+          <DialogFooter>
+            <Button onClick={() => { setShowAddressDialog(false); navigate('/profile?tab=address'); }} className="w-full bg-crimson hover:bg-crimson/90 text-black font-bold">
+              {t('profile.go_to_address') || 'Заполнить'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </nav>
   );
 };

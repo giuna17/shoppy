@@ -159,6 +159,36 @@ export const translations: Translations = {
     en: 'Checkout',
     ge: 'შეკვეთის გაფორმება'
   },
+  'cart.delivery_fee': {
+    ru: '+5 лар за доставку',
+    en: '+5 lari for delivery',
+    ge: '+5 ლარი მიწოდებისთვის'
+  },
+  'cart.free_delivery': {
+    ru: 'Бесплатная доставка!',
+    en: 'Free delivery!',
+    ge: 'უფასო მიწოდება!'
+  },
+  'cart.promo_info': {
+    ru: 'при заказе от 100 лар доставка бесплатно! - а при заказе от 500 лар - скидка 10%!',
+    en: 'For orders from 100 lari, delivery is free! For orders from 500 lari, 10% discount!',
+    ge: '100 ლარიდან მიწოდება უფასოა! 500 ლარიდან - 10% ფასდაკლება!'
+  },
+  'cart.discount_10': {
+    ru: 'Вам предоставляется 10%-ая скидка!',
+    en: 'You get a 10% discount!',
+    ge: 'თქვენ იღებთ 10%-იან ფასდაკლებას!'
+  },
+  'cart.discount_5': {
+    ru: 'Вам предоставляется 5%-ая скидка за хороший отзыв!',
+    en: 'You get a 5% discount for a good review!',
+    ge: 'კარგი მიმოხილვისთვის იღებთ 5%-იან ფასდაკლებას!'
+  },
+  'cart.free_delivery_info': {
+    ru: 'При заказе от 100 лар — бесплатная доставка!',
+    en: 'For orders from 100 lari — free delivery!',
+    ge: '100 ლარიდან მიწოდება უფასოა!'
+  },
   
   // Товары
   'product.add_to_cart': {
@@ -357,7 +387,7 @@ export const translations: Translations = {
     en: 'No reviews yet',
     ge: 'ჯერ არ არის მიმოხილვები'
   },
-  'reviews.testimonials': {
+  'reviews.customer_reviews': {
     ru: 'Отзывы клиентов',
     en: 'Customer Reviews',
     ge: 'მომხმარებელთა მიმოხილვები'
@@ -406,6 +436,11 @@ export const translations: Translations = {
     ru: 'Отзывы могут оставлять только покупатели, которые приобрели этот товар.',
     en: 'Reviews can only be left by customers who have purchased this item.',
     ge: 'მიმოხილვების დატოვება შეუძლიათ მხოლოდ მომხმარებლებს, რომლებმაც შეიძინეს ეს ნივთი.'
+  },
+  'reviews.leave_good_review_discount': {
+    ru: 'Оставь хороший отзыв и получи 5% скидку на следующий заказ!',
+    en: 'Leave a good review and get 5% off your next order!',
+    ge: 'დატოვე კარგი მიმოხილვა და მიიღე 5% ფასდაკლება შემდეგ შეკვეთაზე!'
   },
   
   // Аутентификация
@@ -652,44 +687,40 @@ export const translations: Translations = {
     en: 'We\'ve received your message and will get back to you soon.',
     ge: 'ჩვენ მივიღეთ თქვენი შეტყობინება და მალე დაგიკავშირდებით.'
   },
-  product: {
-    details: {
-      material: {
-        ru: 'Материал',
-        en: 'Material',
-        ge: 'მასალა'
-      },
-      stainless_steel: {
-        ru: 'Нержавеющая сталь',
-        en: 'Stainless Steel',
-        ge: 'უჟანგავი ფოლადი'
-      },
-      chain_length: {
-        ru: 'Длина цепочки',
-        en: 'Chain Length',
-        ge: 'ჯაჭვის სიგრძე'
-      },
-      pendant_size: {
-        ru: 'Размер подвески',
-        en: 'Pendant Size',
-        ge: 'გულსაკიდის ზომა'
-      },
-      in_stock: {
-        ru: 'В наличии',
-        en: 'In Stock',
-        ge: 'მარაგშია'
-      },
-      pieces: {
-        ru: 'шт.',
-        en: 'pcs',
-        ge: 'ც.'
-      },
-      cm: {
-        ru: 'см',
-        en: 'cm',
-        ge: 'სმ'
-      }
-    }
+  'product.details.material': {
+    ru: 'Материал',
+    en: 'Material',
+    ge: 'მასალა'
+  },
+  'product.details.stainless_steel': {
+    ru: 'Нержавеющая сталь',
+    en: 'Stainless Steel',
+    ge: 'უჟანგავი ფოლადი'
+  },
+  'product.details.chain_length': {
+    ru: 'Длина цепочки',
+    en: 'Chain Length',
+    ge: 'ჯაჭვის სიგრძე'
+  },
+  'product.details.pendant_size': {
+    ru: 'Размер подвески',
+    en: 'Pendant Size',
+    ge: 'გულსაკიდის ზომა'
+  },
+  'product.details.in_stock': {
+    ru: 'В наличии',
+    en: 'In Stock',
+    ge: 'მარაგშია'
+  },
+  'product.details.pieces': {
+    ru: 'шт.',
+    en: 'pcs',
+    ge: 'ც.'
+  },
+  'product.details.cm': {
+    ru: 'см',
+    en: 'cm',
+    ge: 'სმ'
   },
 
   // Profile page translations
@@ -752,6 +783,116 @@ export const translations: Translations = {
     ru: 'ru',
     en: 'en',
     ge: 'ge'
+  },
+  'profile.address': {
+    ru: 'Адрес',
+    en: 'Address',
+    ge: 'მისამართი'
+  },
+  'profile.address_description': {
+    ru: 'Укажите адрес проживания и номер телефона для доставки',
+    en: 'Enter your address and phone number for delivery',
+    ge: 'შეიყვანეთ მისამართი და ტელეფონის ნომერი მიწოდებისთვის'
+  },
+  'profile.city': {
+    ru: 'Город',
+    en: 'City',
+    ge: 'ქალაქი'
+  },
+  'profile.tbilisi': {
+    ru: 'Тбилиси',
+    en: 'Tbilisi',
+    ge: 'თბილისი'
+  },
+  'profile.only_tbilisi': {
+    ru: 'Мы пока что доставляем лишь по Тбилиси',
+    en: 'We currently deliver only in Tbilisi',
+    ge: 'ამჟამად ვაწვდით მხოლოდ თბილისში'
+  },
+  'profile.address_field': {
+    ru: 'Адрес проживания',
+    en: 'Address',
+    ge: 'საცხოვრებელი მისამართი'
+  },
+  'profile.address_placeholder': {
+    ru: 'Улица, дом, квартира',
+    en: 'Street, house, apartment',
+    ge: 'ქუჩა, სახლი, ბინა'
+  },
+  'profile.phone': {
+    ru: 'Телефон',
+    en: 'Phone',
+    ge: 'ტელეფონი'
+  },
+  'profile.phone_placeholder': {
+    ru: 'Ваш номер телефона',
+    en: 'Your phone number',
+    ge: 'თქვენი ტელეფონის ნომერი'
+  },
+  'profile.save': {
+    ru: 'Сохранить',
+    en: 'Save',
+    ge: 'შენახვა'
+  },
+  'profile.saved': {
+    ru: 'Сохранено!',
+    en: 'Saved!',
+    ge: 'შენახულია!'
+  },
+  'profile.edit': {
+    ru: 'Изменить',
+    en: 'Edit',
+    ge: 'რედაქტირება'
+  },
+  'home.search_placeholder': {
+    ru: 'Поиск по товарам...',
+    en: 'Search products...',
+    ge: 'პროდუქტების ძიება...'
+  },
+  'filters.title': {
+    ru: 'Фильтры',
+    en: 'Filters',
+    ge: 'ფილტრები'
+  },
+  'filters.price': {
+    ru: 'Цена',
+    en: 'Price',
+    ge: 'ფასი'
+  },
+  'filters.materials': {
+    ru: 'Материалы',
+    en: 'Materials',
+    ge: 'მასალები'
+  },
+  'filters.in_stock': {
+    ru: 'В наличии',
+    en: 'In stock',
+    ge: 'მარაგშია'
+  },
+  'filters.apply': {
+    ru: 'Применить',
+    en: 'Apply',
+    ge: 'გადატარება'
+  },
+  'filters.reset': {
+    ru: 'Сбросить',
+    en: 'Reset',
+    ge: 'გადატვირთვა'
+  },
+  'reviews.testimonials': {
+    ru: 'Отзывы',
+    en: 'Testimonials',
+    ge: 'მიმოხილვები'
+  },
+  'profile.fill_address_warning': {
+    ru: 'Пожалуйста, заполните адрес проживания и номер телефона в профиле.',
+    en: 'Please fill in your address and phone number in your profile.',
+    ge: 'გთხოვთ, შეავსეთ მისამართი და ტელეფონის ნომერი თქვენს პროფილში.'
+  },
+  'profile.go_to_address': {
+    ru: 'Заполнить',
+    en: 'Fill in',
+    ge: 'შევსება'
   }
 };
 

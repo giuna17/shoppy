@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Star, StarHalf, StarOff } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -57,7 +56,12 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews, showTitle = true }) =>
   return (
     <div className="space-y-6">
       {showTitle && (
-        <h3 className="text-xl font-semibold">{t('reviews.title')} ({reviews.length})</h3>
+        <>
+          <div className="mb-4 text-center text-base font-bold text-green-700">
+            {t('reviews.leave_good_review_discount')}
+          </div>
+          <h3 className="text-xl font-semibold">{t('reviews.title')} ({reviews.length})</h3>
+        </>
       )}
       
       {reviews.map((review) => (

@@ -25,6 +25,29 @@ const Profile = () => {
   const [reviewComment, setReviewComment] = useState('');
   const [reviewPhoto, setReviewPhoto] = useState('');
   const [reviewError, setReviewError] = useState('');
+  const [userReviews, setUserReviews] = useState(() => getUserReviews(user.id));
+  // --- Address Section State ---
+  const [city, setCity] = useState(() => {
+    const saved = localStorage.getItem(`profile_city_${user.id}`);
+    return saved || 'Тбилиси';
+  });
+  const [address, setAddress] = useState(() => localStorage.getItem(`profile_address_${user.id}`) || '');
+  const [phone, setPhone] = useState(() => localStorage.getItem(`profile_phone_${user.id}`) || '');
+  const [addressSaved, setAddressSaved] = useState(false);
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [initialAddress, setInitialAddress] = useState({ city, address, phone });
+
+  const isAddressChanged = city !== initialAddress.city || address !== initialAddress.address || phone !== initialAddress.phone;
+
+  const handleSaveAddress = () => {
+    localStorage.setItem(`profile_city_${user.id}`, city);
+    localStorage.setItem(`profile_address_${user.id}`, address);
+    localStorage.setItem(`profile_phone_${user.id}`, phone);
+    setAddressSaved(true);
+    setIsEditingAddress(false);
+    setInitialAddress({ city, address, phone });
+    setTimeout(() => setAddressSaved(false), 2000);
+  };
 
   React.useEffect(() => {
     if (!isLoggedIn || !user) {
@@ -38,13 +61,6 @@ const Profile = () => {
         <div>Not logged in. Redirecting...</div>
       </div>
     );
-  }
-
-  let userReviews = [];
-  try {
-    userReviews = getUserReviews(user.id) || [];
-  } catch (e: any) {
-    setError('Ошибка загрузки отзывов: ' + (e?.message || e));
   }
 
   // Function to render rating stars
@@ -88,11 +104,12 @@ const Profile = () => {
           </div>
         )}
 
-        {/* Tabs for Purchase History and Reviews */}
+        {/* Tabs for Purchase History, Reviews, and Address */}
         <Tabs defaultValue="purchases" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="purchases">{t('profile.purchases')}</TabsTrigger>
-            <TabsTrigger value="reviews">{t('profile.reviews')}</TabsTrigger>
+          <TabsList className="text-lg">
+            <TabsTrigger value="purchases" className="text-lg">{t('profile.purchases')}</TabsTrigger>
+            <TabsTrigger value="reviews" className="text-lg">{t('profile.reviews')}</TabsTrigger>
+            <TabsTrigger value="address" className="text-lg">{t('profile.address')}</TabsTrigger>
           </TabsList>
 
           {/* Purchase History Tab */}
@@ -134,7 +151,7 @@ const Profile = () => {
                             </Link>
                           </Button>
                           {/* Кнопка оставить отзыв */}
-                          {!alreadyReviewed && (
+                          {!alreadyReviewed && reviewProductId === productId && (
                             <Dialog open={!!reviewProductId} onOpenChange={open => { if (!open) { setReviewProductId(null); setReviewRating(0); setReviewComment(''); setReviewPhoto(''); setReviewError(''); } }}>
                               <DialogTrigger asChild>
                                 <Button
@@ -183,10 +200,24 @@ const Profile = () => {
                                       if (!reviewRating) return setReviewError(t('reviews.rating_required'));
                                       if (!reviewComment.trim()) return setReviewError(t('reviews.comment_required'));
                                       setReviewError('');
-                                      setReviewProductId(null);
-                                      setReviewRating(0);
-                                      setReviewComment('');
-                                      setReviewPhoto('');
+                                      try {
+                                        addReview({
+                                          productId,
+                                          userId: user.id,
+                                          userName: user.username,
+                                          rating: reviewRating,
+                                          comment: reviewComment,
+                                          photoUrl: reviewPhoto || undefined,
+                                          date: new Date(),
+                                        });
+                                        setUserReviews(getUserReviews(user.id));
+                                        setReviewProductId(null);
+                                        setReviewRating(0);
+                                        setReviewComment('');
+                                        setReviewPhoto('');
+                                      } catch (e) {
+                                        setReviewError(t('reviews.already_reviewed'));
+                                      }
                                     }}
                                   >
                                     {t('reviews.submit')}
@@ -271,6 +302,58 @@ const Profile = () => {
                       {t('profile.no_reviews')}
                     </p>
                   )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Address Tab */}
+          <TabsContent value="address">
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle>{t('profile.address')}</CardTitle>
+                <CardDescription>{t('profile.address_description')}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col gap-4 max-w-md">
+                  <label className="font-medium">{t('profile.city')}</label>
+                  <div className="flex items-center gap-2">
+                    <select
+                      className="border rounded px-3 py-2 bg-background flex-1"
+                      value={city}
+                      onChange={e => setCity(e.target.value)}
+                      disabled={!isEditingAddress}
+                    >
+                      <option value="Тбилиси">{t('profile.tbilisi')}</option>
+                    </select>
+                    <span className="text-xs text-muted-foreground ml-2">{t('profile.only_tbilisi')}</span>
+                  </div>
+                  <label className="font-medium">{t('profile.address_field')}</label>
+                  <Input
+                    value={address}
+                    onChange={e => setAddress(e.target.value)}
+                    placeholder={t('profile.address_placeholder')}
+                    disabled={!isEditingAddress}
+                  />
+                  <label className="font-medium">{t('profile.phone')}</label>
+                  <Input
+                    value={phone}
+                    onChange={e => setPhone(e.target.value.replace(/\D/g, ''))}
+                    placeholder={t('profile.phone_placeholder')}
+                    disabled={!isEditingAddress}
+                    type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                  />
+                  <div className="flex justify-between gap-2">
+                    {isEditingAddress ? (
+                      <Button className="mt-2 px-8 py-3 text-base font-bold" onClick={handleSaveAddress} disabled={!isAddressChanged}>{t('profile.save')}</Button>
+                    ) : null}
+                    {!isEditingAddress ? (
+                      <Button className="mt-2 px-8 py-3 text-base font-bold" onClick={() => setIsEditingAddress(true)}>{t('profile.edit')}</Button>
+                    ) : null}
+                  </div>
+                  {addressSaved && <div className="text-green-600 text-sm mt-1">{t('profile.saved')}</div>}
                 </div>
               </CardContent>
             </Card>

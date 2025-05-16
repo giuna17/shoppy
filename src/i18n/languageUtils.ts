@@ -1,9 +1,15 @@
 import { translations } from './translations';
 
+type TranslationParam = string | number | boolean;
+
 /**
  * Translates a key with optional parameters
  */
-export const translateText = (key: string, language: string, params?: Record<string, any>): string => {
+export const translateText = (
+  key: string,
+  language: string,
+  params?: Record<string, TranslationParam>
+): string => {
   if (translations[key] && translations[key][language]) {
     let text = translations[key][language];
     

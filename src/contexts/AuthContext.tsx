@@ -1,34 +1,7 @@
-
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { useState, ReactNode, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useLanguage } from '@/i18n/useLanguage';
-
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  purchasedProducts: number[];
-}
-
-interface AuthContextType {
-  isLoggedIn: boolean;
-  user: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string) => Promise<void>;
-  logout: () => void;
-  loginWithProvider: (provider: string) => Promise<void>;
-  hasUserPurchasedProduct: (productId: number) => boolean;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+import { useLanguage } from '@/contexts/LanguageContext';
+import { User, AuthContextType, AuthContext, useAuth } from './AuthContext.utils';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -177,3 +150,5 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
+
+export { useAuth } from './AuthContext.utils';
