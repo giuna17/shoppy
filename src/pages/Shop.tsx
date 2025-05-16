@@ -130,7 +130,7 @@ const Shop = () => {
             <div className="lg:col-span-3">
               {products.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-foreground/80">{t('product.no_products_found')}</p>
+                  <p className="text-foreground/80 text-xl font-semibold">{t('product.no_products_found') || 'Нет товаров, соответствующих фильтрам.'}</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

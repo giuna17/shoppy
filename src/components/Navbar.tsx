@@ -287,14 +287,16 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container mx-auto flex items-center justify-between py-3">
         <div className="flex items-center gap-2">
-          <img
-            src="/shoppy/lovable-uploads/nekos-logo.jpeg"
-            alt="Neko mini logo"
-            className="h-12 w-12 md:h-[62px] md:w-[62px]"
-          />
-          <span className="text-2xl md:text-3xl font-bold text-crimson" style={{ fontSize: '2.6rem' }}>
-            NEKO<span className="text-white">shop</span>
-          </span>
+          <Link to="/" className="flex items-center gap-2 group">
+            <img
+              src="/shoppy/lovable-uploads/nekos-logo.jpeg"
+              alt="Neko mini logo"
+              className="h-12 w-12 md:h-[62px] md:w-[62px]"
+            />
+            <span className="text-2xl md:text-3xl font-bold text-crimson group-hover:underline" style={{ fontSize: '2.6rem' }}>
+              NEKO<span className="text-white">shop</span>
+            </span>
+          </Link>
         </div>
         
         <div className="hidden md:flex space-x-6">
@@ -434,7 +436,7 @@ const Navbar = () => {
                           <>
                             {discountBlock}
                             {discountInfo}
-                            <div className={`text-center text-sm font-semibold my-2 ${total >= 100 ? 'text-green-600' : 'text-red-600'}`}>{deliveryText}</div>
+                            <div className={`text-center text-lg font-semibold my-2 ${total >= 100 ? 'text-green-600' : 'text-red-600'}`}>{deliveryText}</div>
                             <div className="flex justify-between font-medium py-2">
                               <span>{t('cart.total')}:</span>
                               <span>{finalTotal} ₾</span>

@@ -105,11 +105,11 @@ const Profile = () => {
         )}
 
         {/* Tabs for Purchase History, Reviews, and Address */}
-        <Tabs defaultValue="purchases" className="space-y-4">
+        <Tabs defaultValue="address" className="space-y-4">
           <TabsList className="text-lg">
+            <TabsTrigger value="address" className="text-lg">{t('profile.address')}</TabsTrigger>
             <TabsTrigger value="purchases" className="text-lg">{t('profile.purchases')}</TabsTrigger>
             <TabsTrigger value="reviews" className="text-lg">{t('profile.reviews')}</TabsTrigger>
-            <TabsTrigger value="address" className="text-lg">{t('profile.address')}</TabsTrigger>
           </TabsList>
 
           {/* Purchase History Tab */}
