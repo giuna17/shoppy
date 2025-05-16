@@ -470,7 +470,9 @@ const Navbar = () => {
       <Dialog open={showAddressDialog} onOpenChange={setShowAddressDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('profile.address')}</DialogTitle>
+            <DialogTitle>
+              <span className="block text-center text-2xl font-bold text-crimson">ВАЖНО!</span>
+            </DialogTitle>
           </DialogHeader>
           <div className="text-center text-lg mb-4">{t('profile.fill_address_warning') || 'Пожалуйста, заполните адрес проживания и номер телефона в профиле.'}</div>
           <DialogFooter>
