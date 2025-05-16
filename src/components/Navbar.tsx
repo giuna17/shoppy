@@ -337,21 +337,20 @@ const Navbar = () => {
           </NavigationMenu>
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="scale-110 flex items-center gap-4">
           <LanguageSwitcher 
             currentLanguage={language} 
             onLanguageChange={setLanguage} 
           />
-          
           {auth.isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="rounded-full">
-                  <User className="h-5 w-5" />
+                  <User className="h-6 w-6" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <div className="px-2 py-1.5 text-sm font-medium">
+                <div className="px-2 py-1.5 text-base font-medium">
                   {t('auth.welcome')}, {auth.user?.username}
                 </div>
                 <DropdownMenuSeparator />
@@ -361,7 +360,7 @@ const Navbar = () => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer" onClick={auth.logout}>
-                  <LogOut className="h-4 w-4 mr-2" />
+                  <LogOut className="h-5 w-5 mr-2" />
                   {t('auth.sign_out')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -385,12 +384,11 @@ const Navbar = () => {
               </DialogContent>
             </Dialog>
           )}
-          
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="relative">
-                <ShoppingCart className="h-5 w-5" />
-                <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-crimson text-white">{totalItems}</Badge>
+                <ShoppingCart className="h-6 w-6" />
+                <Badge className="absolute -top-2 -right-2 h-6 w-6 flex items-center justify-center p-0 bg-crimson text-white">{totalItems}</Badge>
               </Button>
             </SheetTrigger>
             <SheetContent>
